@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIT Software Skills Institute</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Raleway:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#10B981',
+                        accent: '#F59E0B',
+                        dark: '#1F2937',
+                        light: '#F9FAFB',
+                    },
+                    fontFamily: {
+                        heading: ['Raleway', 'sans-serif'],
+                        body: ['Poppins', 'sans-serif'],
+                    },
+                    animation: {
+                        'float-slow': 'float 6s ease-in-out infinite',
+                        'float-slower': 'float 8s ease-in-out infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .typing-container::after {
+            content: "|";
+            animation: blink 1s step-end infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .fade-in-out {
+            animation: fadeInOut 3s ease-in-out infinite;
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        .community-bg {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .course-card {
+            transition: all 0.3s ease;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .admission-step {
+            transition: all 0.3s ease;
+        }
+        
+        .admission-step:hover {
+            transform: scale(1.05);
+        }
+        
+        .form-field {
+            transition: all 0.3s ease;
+        }
+        
+        .form-field:focus {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.1);
+        }
+        
+        .profile-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            cursor: pointer;
+        }
+        
+        .profile-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(79, 70, 229, 0.95);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            padding: 20px;
+            text-align: center;
+            border-radius: 16px;
+        }
+        
+        .profile-container:hover .profile-overlay {
+            opacity: 1;
+        }
+        
+        .announcement-popup {
+            animation: slideIn 0.8s ease-out forwards, pulse 2s infinite 1s;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        .close-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+        
+        .video-background {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+        
+        .video-background video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.15;
+            z-index: 0;
+        }
+        
+        .video-background .content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .success-box {
+            display: none;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        
+        @keyframes confettiFall {
+            0% { 
+                opacity: 1;
+                transform: translateY(-10px) rotate(0deg); 
+            }
+            100% { 
+                opacity: 0;
+                transform: translateY(100vh) rotate(720deg); 
+            }
+        }
+        
+        .mobile-menu {
+            display: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-menu.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="font-body bg-gradient-to-br from-blue-50 to-indigo-100 text-dark">
+    <!-- Announcement Popup -->
+    <div class="fixed top-0 left-0 w-full bg-accent text-white z-50 announcement-popup">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="bg-white text-accent rounded-full p-2 mr-3">
+                    <i class="fas fa-graduation-cap"></i>
+                </span>
+                <p class="font-bold text-lg">Admissions Open Now! Transform Your Future in IT</p>
+            </div>
+            <button class="close-btn bg-white text-accent rounded-full w-8 h-8 flex items-center justify-center">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 bg-white shadow-md" style="top: 48px;">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <h1 class="font-heading text-2xl md:text-3xl font-bold text-primary">MIT Software Skills Institute</h1>
+            </div>
+            
+            <nav class="hidden md:flex space-x-8">
+                <a href="#home" class="text-dark hover:text-primary font-medium transition-colors">Home</a>
+                <a href="#about" class="text-dark hover:text-primary font-medium transition-colors">About Us</a>
+                <a href="#courses" class="text-dark hover:text-primary font-medium transition-colors">Courses</a>
+                <a href="#miqbal" class="text-dark hover:text-primary font-medium transition-colors">Founder</a>
+                <a href="#admission" class="text-dark hover:text-primary font-medium transition-colors">Admission</a>
+                <a href="#contact" class="text-dark hover:text-primary font-medium transition-colors">Contact</a>
+            </nav>
+            
+            <button id="mobile-menu-button" class="md:hidden text-dark">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu absolute top-full left-0 w-full bg-white shadow-md flex flex-col p-4">
+            <a href="#home" class="py-2 text-dark hover:text-primary font-medium transition-colors">Home</a>
+            <a href="#about" class="py-2 text-dark hover:text-primary font-medium transition-colors">About Us</a>
+            <a href="#courses" class="py-2 text-dark hover:text-primary font-medium transition-colors">Courses</a>
+            <a href="#miqbal" class="py-2 text-dark hover:text-primary font-medium transition-colors">Founder</a>
+            <a href="#admission" class="py-2 text-dark hover:text-primary font-medium transition-colors">Admission</a>
+            <a href="#contact" class="py-2 text-dark hover:text-primary font-medium transition-colors">Contact</a>
+        </div>
+    </header>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/923134045449" class="fixed bottom-6 right-6 z-50 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition-all">
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
+
+    <!-- Hero Section -->
+    <section id="home" class="py-16 md:py-24 relative overflow-hidden" style="margin-top: 48px;">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
+            <!-- Center Content -->
+            <div class="md:w-1/2 text-center md:text-left mb-10 md:mb-0 px-4">
+                <h2 class="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-6 min-h-[120px] flex items-center justify-center md:justify-start">
+                    <span class="typing-container">Top IT Courses in FarooqAbad</span>
+                </h2>
+                <p class="text-lg md:text-xl text-dark mb-6">Join now and unlock your IT career potential!</p>
+                <p class="text-gray-600 mb-8">Gain industry-relevant skills, learn from expert instructors, and kickstart your career in the thriving IT industry with our comprehensive training programs.</p>
+                <a href="#admission" class="inline-block bg-primary text-white font-medium py-3 px-8 rounded-full shadow-lg hover:bg-indigo-700 transition-all transform hover:-translate-y-1">
+                    Apply Now
+                </a>
+            </div>
+            
+            <!-- Right Side - Profile Image with Hover Effect -->
+            <div class="md:w-1/2 flex justify-center">
+                <div class="profile-container w-4/5 md:w-3/5">
+                    <img src="/mitimg4.jpeg" alt="Co-Founder" class="rounded-2xl shadow-xl w-full ">
+                    <div class="profile-overlay">
+                        <h3 class="font-bold text-3xl mb-2">Mam Maryam</h3>
+                         <!-- <p class="text-sm mb-1">Co-Founder</p> -->
+                        <!-- <p class="text-sm mb-1">Software Engineer</p> -->
+                        <!-- <p class="text-sm mb-1">Msc Maths</p>  -->
+                        <!-- <p class="text-sm mb-1">B.ed</p> -->
+                        <!-- <p class="text-sm mb-4">Trainer</p> -->
+                        <p class="text-xs text-justify px-4">Hello! I’m Maryam, Co-Founder of MIT Software Skills Institute. I hold an MSc in Mathematics, a B.Ed, and I’m a Software Engineer as well as an IT Trainer. With years of experience in web development, database management, and software engineering, I have had the privilege of teaching many students. My focus is on making programming fundamentals easy to understand, and I specialize in front-end development technologies as well as full-stack web applications using modern frameworks.</p> 
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Section -->
+    <section class="py-16 community-bg text-white text-center">
+        <div class="container mx-auto px-4">
+            <h2 class="font-heading text-3xl md:text-4xl font-bold mb-6">PAKISTAN MOST LOVED PROGRAMMING COMMUNITY</h2>
+            <p class="text-xl max-w-3xl mx-auto">Join thousands of students who have transformed their careers through our industry-relevant IT courses and supportive learning environment.</p>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="font-heading text-3xl md:text-4xl font-bold text-center text-primary mb-12">About Us</h2>
+            
+            <div class="max-w-4xl mx-auto text-lg text-gray-700">
+                <p class="mb-6">MIT Software Skills Institute was founded in 2023 by Mam Maryam and Muhammad Iqbal with a vision to empower students with practical IT skills. Since our beginning, we have been dedicated to delivering high-quality training in both online and offline modes.</p>
+                
+                <p class="mb-6">We have successfully trained many students in various IT disciplines including Web Development (MERN Stack), Web Designing, Frontend Web Development, Backend Web Development, C/C++, Python, Computer Basics & MS Office (Word, PowerPoint, Excel), and Professional Computer Skills.</p>
+                
+                <div class="bg-blue-50 p-6 rounded-xl border-l-4 border-primary">
+                    <h3 class="font-heading text-xl font-bold text-primary mb-3">Mission Statement</h3>
+                    <p class="italic">"At MIT Software Skills Institute, our mission is to bridge the gap between education and technology, helping students build careers in the IT field. We believe in hands-on learning, mentorship, and creating opportunities for everyone to excel in the digital world."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section id="courses" class="py-16 bg-gradient-to-b from-blue-50 to-indigo-100">
+        <div class="container mx-auto px-4">
+            <h2 class="font-heading text-3xl md:text-4xl font-bold text-center text-primary mb-12">Our Courses</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Course 1 -->
+                <div class="glass-effect rounded-2xl p-6 course-card">
+                    <h3 class="text-xl font-bold text-primary mb-3">Diploma in Computer Course</h3>
+                    <div class="space-y-2 mb-4">
+                        <p class="flex items-center"><i class="fas fa-laptop-house mr-2 text-secondary"></i> Mode: Online & Offline</p>
+                        <p class="flex items-center"><i class="fas fa-signal mr-2 text-secondary"></i> Level: Beginner</p>
+                        <p class="flex items-center"><i class="fas fa-certificate mr-2 text-secondary"></i> Certificate: Provided</p>
+                    </div>
+                    <button class="course-detail-btn w-full bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors">Course Details</button>
+                    <div class="course-detail-content mt-4 hidden">
+                        <h4 class="font-semibold text-primary mb-2">Course Outline:</h4>
+                        <ul class="list-disc pl-5 mb-3 text-sm">
+                            <li>Computer Fundamentals</li>
+                            <li>MS Office Applications</li>
+                            <li>Internet & Email</li>
+                            <li>Basic Troubleshooting</li>
+                        </ul>
+                        <p class="font-semibold">Fee Structure:</p>
+                        <p>1 month: 3,000 PKR | 3 months: 9,000 PKR</p>
+                        <p class="text-sm text-gray-600 mt-1">Registration: 1,000 PKR</p>
+                    </div>
+                </div>
+                
+                <!-- Course 2 -->
+                <div class="glass-effect rounded-2xl p-6 course-card">
+                    <h3 class="text-xl font-bold text-primary mb-3">Web Designing</h3>
+                    <div class="space-y-2 mb-4">
+                        <p class="flex items-center"><i class="fas fa-laptop-house mr-2 text-secondary"></i> Mode: Online & Offline</p>
+                        <p class="flex items-center"><i class="fas fa-signal mr-2 text-secondary"></i> Level: Beginner to Advanced</p>
+                        <p class="flex items-center"><i class="fas fa-certificate mr-2 text-secondary"></i> Certificate: Provided</p>
+                    </div>
+                    <button class="course-detail-btn w-full bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors">Course Details</button>
+                    <div class="course-detail-content mt-4 hidden">
+                        <h4 class="font-semibold text-primary mb-2">Course Outline:</h4>
+                        <ul class="list-disc pl-5 mb-3 text-sm">
+                            <li>HTML5 & CSS3</li>
+                            <li>Responsive Design</li>
+                            <li>JavaScript Basics</li>
+                            <li>UI/UX Principles</li>
+                            <li>Bootstrap Framework</li>
+                        </ul>
+                        <p class="font-semibold">Fee Structure:</p>
+                        <p>Duration: 4 months | Fee: 25,000 PKR</p>
+                        <p class="text-sm text-gray-600 mt-1">Registration: 1,000 PKR</p>
+                    </div>
+                </div>
+                
+                <!-- Course 3 -->
+                <div class="glass-effect rounded-2xl p-6 course-card">
+                    <h3 class="text-xl font-bold text-primary mb-3">Web Development (MERN Stack)</h3>
+                    <div class="space-y-2 mb-4">
+                        <p class="flex items-center"><i class="fas fa-laptop-house mr-2 text-secondary"></i> Mode: Online & Offline</p>
+                        <p class="flex items-center"><i class="fas fa-signal mr-2 text-secondary"></i> Level: Beginner to Advanced</p>
+                        <p class="flex items-center"><i class="fas fa-certificate mr-2 text-secondary"></i> Certificate: Provided</p>
+                    </div>
+                    <button class="course-detail-btn w-full bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors">Course Details</button>
+                    <div class="course-detail-content mt-4 hidden">
+                        <h4 class="font-semibold text-primary mb-2">Course Outline:</h4>
+                        <ul class="list-disc pl-5 mb-3 text-sm">
+                            <li>MongoDB Database</li>
+                            <li>Express.js Framework</li>
+                            <li>React.js Library</li>
+                            <li>Node.js Runtime</li>
+                            <li>RESTful APIs</li>
+                            <li>Authentication & Authorization</li>
+                        </ul>
+                        <p class="font-semibold">Fee Structure:</p>
+                        <p>Duration: 6 months | Fee: 40,000 PKR</p>
+                        <p class="text-sm text-gray-600 mt-1">Registration: 1,000 PKR</p>
+                    </div>
+                </div>
+                
+                <!-- Course 4 -->
+                <div class="glass-effect rounded-2xl p-6 course-card">
+                    <h3 class="text-xl font-bold text-primary mb-3">HTML & CSS Crash Course</h3>
+                    <div class="space-y-2 mb-4">
+                        <p class="flex items-center"><i class="fas fa-laptop-house mr-2 text-secondary"></i> Mode: Online & Offline</p>
+                        <p class="flex items-center"><i class="fas fa-signal mr-2 text-secondary"></i> Level: Beginner</p>
+                        <p class="flex items-center"><i class="fas fa-certificate mr-2 text-secondary"></i> Certificate: Provided</p>
+                    </div>
+                    <button class="course-detail-btn w-full bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors">Course Details</button>
+                    <div class="course-detail-content mt-4 hidden">
+                        <h4 class="font-semibold text-primary mb-2">Course Outline:</h4>
+                        <ul class="list-disc pl-5 mb-3 text-sm">
+                            <li>HTML Fundamentals</li>
+                            <li>CSS Styling</li>
+                            <li>Layout Techniques</li>
+                            <li>Basic Responsive Design</li>
+                        </ul>
+                        <p class="font-semibold">Fee Structure:</p>
+                        <p>Duration: 2 months | Fee: 10,000 PKR</p>
+                        <p class="text-sm text-gray-600 mt-1">Registration: 1,000 PKR</p>
+                    </div>
+                </div>
+                
+                <!-- Course 5 -->
+                <div class="glass-effect rounded-2xl p-6 course-card">
+                    <h3 class="text-xl font-bold text-primary mb-3">C/C++</h3>
+                    <div class="space-y-2 mb-4">
+                        <p class="flex items-center"><i class="fas fa-laptop-house mr-2 text-secondary"></i> Mode: Online & Offline</p>
+                        <p class="flex items-center"><i class="fas fa-signal mr-2 text-secondary"></i> Level: Beginner to Advanced</p>
+                        <p class="flex items-center"><i class="fas fa-certificate mr-2 text-secondary"></i> Certificate: Provided</p>
+                    </div>
+                    <button class="course-detail-btn w-full bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors">Course Details</button>
+                    <div class="course-detail-content mt-4 hidden">
+                        <h4 class="font-semibold text-primary mb-2">Course Outline:</h4>
+                        <ul class="list-disc pl-5 mb-3 text-sm">
+                            <li>C Programming Basics</li>
+                            <li>Data Structures</li>
+                            <li>Object-Oriented Programming with C++</li>
+                            <li>Algorithms</li>
+                            <li>Memory Management</li>
+                        </ul>
+                        <p class="font-semibold">Fee Structure:</p>
+                        <p>Duration: 3 months | Fee: 12,000 PKR</p>
+                        <p class="text-sm text-gray-600 mt-1">Registration: 1,000 PKR</p>
+                    </div>
+                </div>
+                
+                <!-- Course 6 -->
+                <div class="glass-effect rounded-2xl p-6 course-card">
+                    <h3 class="text-xl font-bold text-primary mb-3">Python</h3>
+                    <div class="space-y-2 mb-4">
+                        <p class="flex items-center"><i class="fas fa-laptop-house mr-2 text-secondary"></i> Mode: Online & Offline</p>
+                        <p class="flex items-center"><i class="fas fa-signal mr-2 text-secondary"></i> Level: Beginner to Advanced</p>
+                        <p class="extremely items-center"><i class="fas fa-certificate mr-2 text-secondary"></i> Certificate: Provided</p>
+                    </div>
+                    <button class="course-detail-btn w-full bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors">Course Details</button>
+                    <div class="course-detail-content mt-4 hidden">
+                        <h4 class="font-semibold text-primary mb-2">Course Outline:</h4>
+                        <ul class="list-disc pl-5 mb-3 text-sm">
+                            <li>Python Syntax & Basics</li>
+                            <li>Data Structures in Python</li>
+                            <li>Object-Oriented Programming</li>
+                            <li>File Handling</li>
+                            <li>Libraries & Frameworks</li>
+                        </ul>
+                        <p class="font-semibold">Fee Structure:</p>
+                        <p>Duration: 3 months | Fee: 15,000 PKR</p>
+                        <p class="text-sm text-gray-600 mt-1">Registration: 1,000 PKR</p>
+                    </div>
+                </div>
+                
+                <!-- Course 7 -->
+                <div class="glass-effect rounded-2xl p-6 course-card">
+                    <h3 class="text-xl font-bold text-primary mb-3">Kids Coding</h3>
+                    <div class="space-y-2 mb-4">
+                        <p class="flex items-center"><i class="fas fa-laptop-house mr-2 text-secondary"></i> Mode: Online & Offline</p>
+                        <p class="flex items-center"><i class="fas fa-signal mr-2 text-secondary"></i> Level: Beginner</p>
+                        <p class="flex items-center"><i class="fas fa-certificate mr-2 text-secondary"></i> Certificate: Provided</p>
+                    </div>
+                    <button class="course-detail-btn w-full bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors">Course Details</button>
+                    <div class="course-detail-content mt-4 hidden">
+                        <h4 class="font-semibold text-primary mb-2">Course Outline:</h4>
+                        <ul class="list-disc pl-5 mb-3 text-sm">
+                            <li>Introduction to Coding</li>
+                            <li>Block-Based Programming</li>
+                            <li>Simple Game Development</li>
+                            <li>Basic Problem Solving</li>
+                            <li>Creative Computing</li>
+                        </ul>
+                        <p class="font-semibold">Fee Structure:</p>
+                        <p>Duration: 2 months | Fee: 10,000 PKR</p>
+                        <p class="text-sm text-gray-600 mt-1">Registration: 1,000 PKR</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About MIqbal Section -->
+    <section id="miqbal" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl shadow-lg p-8 md:p-12">
+                <div class="text-center mb-8">
+                    <img src="/mitimg1.png" alt="Muhammad Iqbal" class="w-32 h-32 rounded-full mx-auto mb-6 shadow-lg object-cover">
+                    <h2 class="font-heading text-3xl md:text-4xl font-bold mb-4">
+                        <span class="text-primary">Meet</span> <span class="text-secondary">MIqbal</span>
+                    </h2>
+                    <span class="inline-block bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-full text-sm font-semibold shadow-md">
+                        Founder of MIT Software Skills Institute
+                    </span>
+                </div>
+                
+                <div class="text-lg text-gray-700">
+                    <p class="mb-6">I am Muhammad Iqbal, a passionate software engineer and educator with over 10 years of experience in the IT industry. My journey in technology began during my university studies, and since then, I've dedicated my career to sharing knowledge and empowering others.</p>
+                    
+                    <p class="mb-6">I specialize in full-stack web development with expertise in:</p>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                        <div class="bg-white p-3 rounded-lg text-center shadow-sm">MERN Stack</div>
+                        <div class="bg-white p-3 rounded-lg text-center shadow-sm">Python/Django</div>
+                        <div class="bg-white p-3 rounded-lg text-center shadow-sm">Cloud Computing</div>
+                        <div class="bg-white p-3 rounded-lg text-center shadow-sm">UI/UX Design</div>
+                        <div class="bg-white p-3 rounded-lg text-center shadow-sm">DevOps</div>
+                        <div class="bg-white p-3 rounded-lg text-center shadow-sm">Database Design</div>
+                    </div>
+                    
+                    <p class="mb-6">At MIT Software Skills Institute, I personally teach advanced programming concepts and mentor students through their projects. My teaching philosophy focuses on practical, hands-on learning that prepares students for real-world challenges.</p>
+                    
+                    <p>When I'm not coding or teaching, I contribute to open-source projects and speak at developer conferences. My mission is to bridge the gap between academia and industry requirements, creating job-ready professionals who can thrive in the competitive IT market.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admission Process -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="font-heading text-3xl md:text-4xl font-bold text-center text-primary mb-12">Admission Process</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Step 1 -->
+                <div class="glass-effect rounded-2xl p-6 text-center admission-step">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">1</div>
+                    <h3 class="text-xl font-bold text-primary mb-3">Application</h3>
+                    <p class="text-gray-600">Fill out online form</p>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="glass-effect rounded-2xl p-6 text-center admission-step">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">2</div>
+                    <h3 class="text-xl font-bold text-primary mb-3">Verification</h3>
+                    <p class="text-gray-600">Team verifies & confirms</p>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="glass-effect rounded-2xl p-6 text-center admission-step">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">3</div>
+                    <h3 class="text-xl font-bold text-primary mb-3">Registration</h3>
+                    <p class="text-gray-600">Pay registration fee + first installment</p>
+                </div>
+                
+                <!-- Step 4 -->
+                <div class="glass-effect rounded-2xl p-6 text-center admission-step">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">4</div>
+                    <h3 class="text-xl font-bold text-primary mb-3">Orientation</h3>
+                    <p class="text-gray-600">Join orientation session & start classes</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admission Form with Video Background -->
+    <section id="admission" class="py-16 bg-gradient-to-b from-blue-50 to-indigo-100">
+        <div class="container mx-auto px-4">
+            <h2 class="font-heading text-3xl md:text-4xl font-bold text-center text-primary mb-12">Admission Form</h2>
+            
+            <div class="video-background max-w-4xl mx-auto p-8 rounded-2xl shadow-lg glass-effect">
+                <video autoplay muted loop>
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-rain-on-a-window-12332-large.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="content">
+                    <form id="admission-form">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-700 mb-2" for="first-name">First Name *</label>
+                                <input type="text" id="first-name" name="first-name" class="form-field w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-2" for="last-name">Last Name *</label>
+                                <input type="text" id="last-name" name="last-name" class="form-field w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-2" for="father-name">Father Name *</label>
+                                <input type="text" id="father-name" name="father-name" class="form-field w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-2" for="cnic">CNIC/B-form *</label>
+                                <input type="text" id="cnic" name="cnic" class="form-field w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-2" for="email">Email *</label>
+                                <input type="email" id="email" name="email" class="form-field w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-2" for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" name="phone" class="form-field w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-2" for="city">City *</label>
+                                <input type="text" id="city" name="city" class="form-field w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-2" for="address">Full Address *</label>
+                                <input type="text" id="address" name="address" class="form-field w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-2" for="course">Select Course *</label>
+                                <select id="course" name="course" class="form-field w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                                    <option value="">Select a course</option>
+                                    <option value="diploma">Diploma in Computer Course</option>
+                                    <option value="web-design">Web Designing</option>
+                                    <option value="web-dev">Web Development (MERN Stack)</option>
+                                    <option value="html-css">HTML & CSS Crash Course</option>
+                                    <option value="cpp">C/C++</option>
+                                    <option value="python">Python</option>
+                                    <option value="kids">Kids Coding</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-2" for="payment">Payment Plan *</label>
+                                <select id="payment" name="payment" class="form-field w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                                    <option value="">Select payment plan</option>
+                                    <option value="full">Full Payment (5% Discount)</option>
+                                    <option value="2">2 Installments</option>
+                                    <option value="3">3 Installments</option>
+                                    <option value="4">4 Installments</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-2" for="qualification">Highest Qualification *</label>
+                                <select id="qualification" name="qualification" class="form-field w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                                    <option value="">Select qualification</option>
+                                    <option value="matric">Matric</option>
+                                    <option value="intermediate">Intermediate</option>
+                                    <option value="bachelor">Bachelor</option>
+                                    <option value="master">Master</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-2" for="institute">Previous Institute Name</label>
+                                <input type="text" id="institute" name="institute" class="form-field w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 text-center">
+                            <button type="submit" class="bg-primary text-white font-medium py-3 px-8 rounded-full shadow-lg hover:bg-indigo-700 transition-all transform hover:-translate-y-1">
+                                Submit Application
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Success Message Box -->
+                    <div id="success-box" class="success-box bg-white p-8 rounded-2xl shadow-lg text-center mt-8">
+                        <div class="text-6xl mb-4">🎉</div>
+                        <h3 class="text-2xl md:text-3xl font-bold text-primary mb-4">Congratulations! Your application has been submitted.</h3>
+                        <p class="text-gray-600 mb-6">We will contact you soon with further details.</p>
+                        <button id="submit-another" class="bg-secondary text-white font-medium py-2 px-6 rounded-full hover:bg-green-600 transition-all">
+                            Submit Another Application
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="font-heading text-3xl md:text-4xl font-bold text-center text-primary mb-12">Contact Us</h2>
+            
+            <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center p-6 bg-blue-50 rounded-2xl">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-3">Call Us</h3>
+                    <p class="text-gray-600">03134045449</p>
+                </div>
+                
+                <div class="text-center p-6 bg-blue-50 rounded-2xl">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-3">WhatsApp</h3>
+                    <p class="text-gray-600">03134045449</p>
+                </div>
+                
+                <div class="text-center p-6 bg-blue-50 rounded-2xl">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-3">Email</h3>
+                    <a href="mailto:Institutemit06@gmail.com" class="text-gray-600 hover:text-primary">Institutemit06@gmail.com</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <h2 class="font-heading text-2xl font-bold text-white">MIT Software Skills Institute</h2>
+                    <p class="text-gray-400 mt-2">Empowering students with practical IT skills since 2023</p>
+                </div>
+                
+                <div class="flex space-x-6 mb-6 md:mb-0">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-facebook-f text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-linkedin-in text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-youtube text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <div class="flex space-x-6 mb-4 md:mb-0">
+                    <a href="#home" class="text-gray-400 hover:text-white transition-colors">Home</a>
+                    <a href="#about" class="text-gray-400 hover:text-white transition-colors">About Us</a>
+                    <a href="#courses" class="text-gray-400 hover:text-white transition-colors">Courses</a>
+                    <a href="#miqbal" class="text-gray-400 hover:text-white transition-colors">Founder</a>
+                    <a href="#admission" class="text-gray-400 hover:text-white transition-colors">Admission</a>
+                    <a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contact</a>
+                </div>
+                
+                <p class="text-gray-400">© 2023 MIT Software Skills Institute. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Typing effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const texts = [
+                "Top IT Courses in FarooqAbad",
+                "Web Development Training",
+                "Learn from Industry Experts",
+                "Start Your IT Career Today"
+            ];
+            let textIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            let typingSpeed = 100;
+            
+            function typeEffect() {
+                const currentText = texts[textIndex];
+                const typingElement = document.querySelector('.typing-container');
+                
+                if (isDeleting) {
+                    typingElement.textContent = currentText.substring(0, charIndex - 1);
+                    charIndex--;
+                    typingSpeed = 50;
+                } else {
+                    typingElement.textContent = currentText.substring(0, charIndex + 1);
+                    charIndex++;
+                    typingSpeed = 100;
+                }
+                
+                if (!isDeleting && charIndex === currentText.length) {
+                    isDeleting = true;
+                    typingSpeed = 1000;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    textIndex = (textIndex + 1) % texts.length;
+                    typingSpeed = 500;
+                }
+                
+                setTimeout(typeEffect, typingSpeed);
+            }
+            
+            setTimeout(typeEffect, 1000);
+            
+            // Course detail toggle
+            const courseDetailButtons = document.querySelectorAll('.course-detail-btn');
+            courseDetailButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    if (content.classList.contains('hidden')) {
+                        content.classList.remove('hidden');
+                        this.textContent = 'Hide Details';
+                    } else {
+                        content.classList.add('hidden');
+                        this.textContent = 'Course Details';
+                    }
+                });
+            });
+            
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                    
+                    // Close mobile menu if open
+                    document.getElementById('mobile-menu').classList.remove('active');
+                });
+            });
+            
+            // Close announcement popup
+            document.querySelector('.close-btn').addEventListener('click', function() {
+                document.querySelector('.announcement-popup').style.display = 'none';
+                document.querySelector('header').style.top = '0';
+                document.querySelector('section#home').style.marginTop = '0';
+            });
+            
+            // Mobile menu toggle
+            document.getElementById('mobile-menu-button').addEventListener('click', function() {
+                document.getElementById('mobile-menu').classList.toggle('active');
+            });
+            
+            // Form submission handling
+            const admissionForm = document.getElementById('admission-form');
+            const successBox = document.getElementById('success-box');
+            const submitAnotherBtn = document.getElementById('submit-another');
+            
+            admissionForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Create confetti
+                createConfetti();
+                
+                // Hide form and show success message
+                admissionForm.style.display = 'none';
+                successBox.style.display = 'block';
+                
+                // Scroll to success message
+                successBox.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            submitAnotherBtn.addEventListener('click', function() {
+                // Show form and hide success message
+                admissionForm.style.display = 'block';
+                successBox.style.display = 'none';
+                
+                // Reset form
+                admissionForm.reset();
+                
+                // Scroll to form
+                admissionForm.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Confetti animation function
+            function createConfetti() {
+                const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+                const container = document.body;
+                
+                // Create confetti for 1 minute
+                const confettiInterval = setInterval(() => {
+                    for (let i = 0; i < 20; i++) {
+                        const confetti = document.createElement('div');
+                        confetti.className = 'confetti';
+                        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                        confetti.style.left = Math.random() * 100 + '%';
+                        confetti.style.animation = `confettiFall ${Math.random() * 3 + 2}s linear forwards`;
+                        confetti.style.width = Math.random() * 10 + 5 + 'px';
+                        confetti.style.height = Math.random() * 10 + 5 + 'px';
+                        confetti.style.borrowRadius = Math.random() > 0.5 ? '50%' : '0';
+                        
+                        container.appendChild(confetti);
+                        
+                        // Remove confetti after animation completes
+                        setTimeout(() => {
+                            if (confetti.parentNode) {
+                                confetti.remove();
+                            }
+                        }, 5000);
+                    }
+                }, 200);
+                
+                // Stop confetti after 1 minute
+                setTimeout(() => {
+                    clearInterval(confettiInterval);
+                }, 60000);
+            }
+        });
+    </script>
+</body>
+</html>
